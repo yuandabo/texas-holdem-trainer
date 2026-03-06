@@ -1,0 +1,15 @@
+{
+    "miniprogramRoot": "dist/",
+    "projectname": "texas-holdem-trainer",
+    "description": "德州扑克模拟训练器",
+    "appid": "touristappid",
+    "setting": {
+        "urlCheck": true,
+        "es6": false,
+        "enhance": false,
+        "compileHotReLoad": false,
+        "postcss": false,
+        "minified": false
+    },
+    "compileType": "miniprogram"
+}

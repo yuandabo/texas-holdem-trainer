@@ -1,0 +1,22 @@
+.hand-rank-hint {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 12rpx;
+    padding: 12rpx 24rpx;
+    background-color: rgba(241, 196, 15, 0.1);
+    border-radius: 8rpx;
+    border: 1rpx solid rgba(241, 196, 15, 0.3);
+
+    &__label {
+        font-size: 24rpx;
+        color: #999;
+    }
+
+    &__rank {
+        font-size: 28rpx;
+        font-weight: bold;
+        color: #f39c12;
+    }
+}

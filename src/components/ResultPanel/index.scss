@@ -1,0 +1,38 @@
+.result-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16rpx;
+    padding: 24rpx;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 12rpx;
+
+    &__result {
+        font-size: 36rpx;
+        font-weight: bold;
+
+        &--win {
+            color: #27ae60;
+        }
+
+        &--lose {
+            color: #e74c3c;
+        }
+
+        &--tie {
+            color: #f39c12;
+        }
+    }
+
+    &__hands {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8rpx;
+    }
+
+    &__hand {
+        font-size: 26rpx;
+        color: #666;
+    }
+}
