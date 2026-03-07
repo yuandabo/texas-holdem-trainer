@@ -14,7 +14,7 @@ export default defineConfig<'webpack5'>({
   },
   sourceRoot: 'src',
   outputRoot: 'dist',
-  plugins: ['@tarojs/plugin-framework-react'],
+  plugins: ['@tarojs/plugin-framework-react', '@tarojs/plugin-platform-h5'],
   defineConstants: {},
   copy: { patterns: [], options: {} },
   framework: 'react',
@@ -33,5 +33,23 @@ export default defineConfig<'webpack5'>({
         },
       },
     },
+  },
+  h5: {
+    publicPath: '/',
+    staticDirectory: 'static',
+    output: {
+      filename: 'js/[name].[hash:8].js',
+      chunkFilename: 'js/[name].[chunkhash:8].js',
+    },
+    postcss: {
+      autoprefixer: { enable: true },
+    },
+    devServer: {
+      port: 8080,
+      hot: true,
+      historyApiFallback: true,
+      static: false,
+    },
+    esnextModules: ['taro-ui'],
   },
 }) as UserConfigExport<'webpack5'>;

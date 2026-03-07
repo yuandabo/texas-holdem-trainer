@@ -11,7 +11,9 @@
     "scripts": {
         "build:weapp": "taro build --type weapp",
         "dev:weapp": "taro build --type weapp --watch",
-        "test": "jest"
+        "test": "jest",
+        "build:h5": "taro build --type h5",
+        "dev:h5": "taro build --type h5 --watch"
     },
     "browserslist": [
         "last 3 versions",
@@ -22,6 +24,7 @@
         "@tarojs/components": "4.1.11",
         "@tarojs/helper": "4.1.11",
         "@tarojs/plugin-framework-react": "4.1.11",
+        "@tarojs/plugin-platform-h5": "^4.1.11",
         "@tarojs/plugin-platform-weapp": "4.1.11",
         "@tarojs/react": "4.1.11",
         "@tarojs/runtime": "4.1.11",
@@ -35,6 +38,7 @@
         "@babel/preset-env": "^7.24.0",
         "@babel/preset-react": "^7.24.0",
         "@babel/preset-typescript": "^7.24.0",
+        "@pmmmwh/react-refresh-webpack-plugin": "^0.6.2",
         "@tarojs/cli": "4.1.11",
         "@tarojs/webpack5-runner": "4.1.11",
         "@types/jest": "^29.5.0",
@@ -43,6 +47,7 @@
         "babel-preset-taro": "^4.1.11",
         "fast-check": "^3.22.0",
         "jest": "^29.7.0",
+        "react-refresh": "^0.18.0",
         "sass": "^1.77.0",
         "ts-jest": "^29.2.0",
         "typescript": "^5.4.0"

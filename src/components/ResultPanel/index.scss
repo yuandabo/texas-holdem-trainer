@@ -4,7 +4,7 @@
     align-items: center;
     gap: 16rpx;
     padding: 24rpx;
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: rgba(0, 0, 0, 0.2);
     border-radius: 12rpx;
 
     &__result {
@@ -12,7 +12,7 @@
         font-weight: bold;
 
         &--win {
-            color: #27ae60;
+            color: #2ecc71;
         }
 
         &--lose {
@@ -33,6 +33,6 @@
 
     &__hand {
         font-size: 26rpx;
-        color: #666;
+        color: rgba(255, 255, 255, 0.75);
     }
 }
