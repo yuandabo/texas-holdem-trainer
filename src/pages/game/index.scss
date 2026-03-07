@@ -1,35 +1,56 @@
 .game-page {
-    padding: 24rpx 20rpx;
-    min-height: 100vh;
+    height: 100vh;
     background-color: #1a5c2a;
     box-sizing: border-box;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    overflow: hidden;
 
-    // --- 对手区域：头像 + 信息 + 手牌 ---
+    // --- 主游戏区域 ---
+    &__main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 16rpx 20rpx;
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    // --- 右侧操作日志 ---
+    &__sidebar {
+        width: 240rpx;
+        display: flex;
+        flex-direction: column;
+        padding: 16rpx 12rpx;
+        background-color: rgba(0, 0, 0, 0.2);
+        border-left: 1rpx solid rgba(255, 255, 255, 0.1);
+        overflow: hidden;
+    }
+
+    // --- 对手区域 ---
     &__opponent-section {
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 16rpx;
-        padding: 12rpx 0;
+        padding: 8rpx 0;
+        flex-shrink: 0;
     }
 
     &__avatar {
-        width: 80rpx;
-        height: 80rpx;
+        width: 64rpx;
+        height: 64rpx;
         border-radius: 50%;
         background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        border: 3rpx solid rgba(255, 255, 255, 0.4);
-        box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2);
+        border: 2rpx solid rgba(255, 255, 255, 0.4);
     }
 
     &__avatar-emoji {
-        font-size: 44rpx;
+        font-size: 36rpx;
         line-height: 1;
     }
 
@@ -37,14 +58,27 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 4rpx;
+        gap: 2rpx;
         flex-shrink: 0;
     }
 
     &__opponent-name {
-        font-size: 24rpx;
+        font-size: 22rpx;
         color: rgba(255, 255, 255, 0.85);
         font-weight: bold;
+    }
+
+    // --- 公共牌 + 底池 ---
+    &__community-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 12rpx 0;
+        gap: 6rpx;
+        background-color: rgba(0, 0, 0, 0.12);
+        border-radius: 12rpx;
+        margin: 8rpx 0;
+        flex-shrink: 0;
     }
 
     // --- 玩家区域 ---
@@ -53,115 +87,49 @@
         align-items: center;
         justify-content: center;
         gap: 24rpx;
-        padding: 12rpx 0;
+        padding: 8rpx 0;
+        flex-shrink: 0;
     }
 
-    // --- 公共牌 + 底池 居中区域 ---
-    &__community-section {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 16rpx 0;
-        gap: 8rpx;
-        background-color: rgba(0, 0, 0, 0.12);
-        border-radius: 16rpx;
-        margin: 12rpx 0;
-    }
-
-    &__divider {
-        height: 2rpx;
-        background-color: rgba(255, 255, 255, 0.15);
-        margin: 8rpx 0;
-    }
-
+    // --- 提示区域 ---
     &__hints {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         gap: 12rpx;
-        margin: 12rpx 0;
+        flex-shrink: 0;
         min-height: 0;
     }
 
-    &__actions {
-        display: flex;
-        justify-content: center;
-        align-items: stretch;
-        gap: 24rpx;
-        margin: 16rpx 0;
-    }
-
-    &__btn {
-        flex: 1;
-        height: 88rpx;
-        line-height: 88rpx;
-        font-size: 30rpx;
-        border-radius: 12rpx;
+    // --- 状态栏 ---
+    &__status-bar {
         text-align: center;
-        border: none;
-        padding: 0;
-        margin: 0;
-
-        &::after {
-            display: none;
-        }
-
-        &--next {
-            background-color: #e6a23c !important;
-            color: #fff !important;
-
-            &[disabled] {
-                background-color: rgba(255, 255, 255, 0.15) !important;
-                color: rgba(255, 255, 255, 0.4) !important;
-                opacity: 1;
-            }
-        }
-
-        &--new {
-            background-color: #409eff !important;
-            color: #fff !important;
-        }
-    }
-
-    &__toggles {
-        display: flex;
-        justify-content: space-around;
-        padding: 16rpx 0;
-        background-color: rgba(255, 255, 255, 0.08);
-        border-radius: 12rpx;
-        margin-top: 12rpx;
-    }
-
-    &__toggle-item {
-        display: flex;
-        align-items: center;
-        gap: 12rpx;
-    }
-
-    &__toggle-label {
-        font-size: 26rpx;
-        color: rgba(255, 255, 255, 0.85);
-    }
-
-    &__turn-indicator {
-        text-align: center;
-        padding: 12rpx 0;
+        padding: 6rpx 0;
+        flex-shrink: 0;
+        min-height: 40rpx;
     }
 
     &__turn-text {
-        font-size: 28rpx;
+        font-size: 26rpx;
         color: #f1c40f;
         font-weight: bold;
     }
 
+    &__auto-deal-text {
+        font-size: 24rpx;
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    // --- 弃牌结算 ---
     &__fold-result {
         text-align: center;
-        padding: 24rpx;
+        padding: 16rpx;
         background-color: rgba(0, 0, 0, 0.2);
         border-radius: 12rpx;
+        flex-shrink: 0;
     }
 
     &__fold-text {
-        font-size: 32rpx;
+        font-size: 28rpx;
         font-weight: bold;
 
         &--win {
@@ -171,5 +139,27 @@
         &--lose {
             color: #e74c3c;
         }
+    }
+
+    // --- 提示开关 ---
+    &__toggles {
+        display: flex;
+        justify-content: space-around;
+        padding: 10rpx 0;
+        background-color: rgba(255, 255, 255, 0.08);
+        border-radius: 12rpx;
+        margin-top: auto;
+        flex-shrink: 0;
+    }
+
+    &__toggle-item {
+        display: flex;
+        align-items: center;
+        gap: 8rpx;
+    }
+
+    &__toggle-label {
+        font-size: 24rpx;
+        color: rgba(255, 255, 255, 0.85);
     }
 }

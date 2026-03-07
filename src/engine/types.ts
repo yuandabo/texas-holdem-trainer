@@ -152,6 +152,7 @@ export interface ExtendedGameStateData extends Omit<GameStateData, 'phase'> {
   handNumber: number;
   isGameOver: boolean;
   gameOverWinner: 'player' | 'opponent' | null;
+  actionLog: ActionLogEntry[];
 }
 
 // ===== 下注错误 =====
@@ -171,8 +172,19 @@ export class ChipError extends Error {
 }
 
 // ===== 下注系统常量 =====
-export const INITIAL_CHIPS = 100;
-export const SMALL_BLIND_AMOUNT = 1;
-export const BIG_BLIND_AMOUNT = 2;
-export const MIN_RAISE = 2;
+export const INITIAL_CHIPS = 2000;
+export const SMALL_BLIND_AMOUNT = 10;
+export const BIG_BLIND_AMOUNT = 20;
+export const MIN_RAISE = 20;
 export const AI_DELAY_MS = 500;
+export const AUTO_DEAL_DELAY_MS = 3000;
+
+// ===== 操作日志 =====
+export interface ActionLogEntry {
+  actor: 'player' | 'opponent';
+  phase: string;
+  actionType: string;
+  amount: number;
+}
+
+// ===== 扩展游戏状态（含筹码和下注） =====

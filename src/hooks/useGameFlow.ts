@@ -7,11 +7,13 @@ import {
   BettingRoundState,
   ChipState,
   GameResult,
+  ActionLogEntry,
   INITIAL_CHIPS,
   SMALL_BLIND_AMOUNT,
   BIG_BLIND_AMOUNT,
   MIN_RAISE,
   AI_DELAY_MS,
+  AUTO_DEAL_DELAY_MS,
 } from '@/engine/types';
 import { createDeck, shuffle } from '@/engine/deck';
 import { dealHands, dealFlop, dealTurn, dealRiver } from '@/engine/dealEngine';
@@ -95,6 +97,7 @@ export function createExtendedInitialState(handNumber: number = 1, chipState?: C
     handNumber,
     isGameOver: false,
     gameOverWinner: null,
+    actionLog: [],
   };
 }
 
@@ -264,6 +267,33 @@ function advanceAfterBettingComplete(state: ExtendedGameStateData): ExtendedGame
 
 
 /**
+ * 获取阶段的中文名称
+ */
+function getPhaseLabel(phase: ExtendedGamePhase): string {
+  switch (phase) {
+    case 'pre_flop_betting': return '翻牌前';
+    case 'flop_betting': return '翻牌';
+    case 'turn_betting': return '转牌';
+    case 'river_betting': return '河牌';
+    default: return phase;
+  }
+}
+
+/**
+ * 获取操作的中文名称
+ */
+function getActionLabel(type: string, amount: number): string {
+  switch (type) {
+    case 'check': return '过牌';
+    case 'call': return `跟注 ${amount}`;
+    case 'raise': return `加注 ${amount}`;
+    case 'fold': return '弃牌';
+    case 'all_in': return `全下 ${amount}`;
+    default: return type;
+  }
+}
+
+/**
  * 处理下注操作（玩家或对手），返回更新后的状态。
  * 如果下注回合结束，自动推进到下一阶段。
  */
@@ -271,6 +301,14 @@ function processBetAction(state: ExtendedGameStateData, action: BettingAction): 
   if (!state.bettingRound || state.bettingRound.roundEnded) {
     return state;
   }
+
+  const actor = state.bettingRound.currentActor;
+  const logEntry: ActionLogEntry = {
+    actor,
+    phase: getPhaseLabel(state.phase),
+    actionType: getActionLabel(action.type, action.amount),
+    amount: action.amount,
+  };
 
   const result = executeBettingAction(
     state.bettingRound,
@@ -283,6 +321,7 @@ function processBetAction(state: ExtendedGameStateData, action: BettingAction): 
     ...state,
     bettingRound: result.roundState,
     chipState: result.chipState,
+    actionLog: [...state.actionLog, logEntry],
   };
 
   // Check if someone folded
@@ -455,6 +494,23 @@ export function useGameFlow(): ExtendedUseGameFlowReturn {
       };
     }
   }, [state.phase, state.bettingRound, state.chipState.opponentChips]);
+
+  // Auto-start next hand after showdown (no need to click "新一局")
+  const autoDealRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    if (state.phase === 'showdown' && !state.isGameOver) {
+      autoDealRef.current = setTimeout(() => {
+        dispatch({ type: ACTION_NEW_GAME });
+      }, AUTO_DEAL_DELAY_MS);
+
+      return () => {
+        if (autoDealRef.current) {
+          clearTimeout(autoDealRef.current);
+          autoDealRef.current = null;
+        }
+      };
+    }
+  }, [state.phase, state.isGameOver]);
 
   return {
     state,

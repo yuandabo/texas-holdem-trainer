@@ -212,7 +212,7 @@ describe('RESTART_GAME resets everything', () => {
     // Now restart
     state = gameFlowReducer(state, { type: ACTION_RESTART_GAME });
     expect(state.handNumber).toBe(1);
-    expect(state.chipState.playerChips + state.chipState.opponentChips + (state.bettingRound?.pot ?? 0)).toBe(200);
+    expect(state.chipState.playerChips + state.chipState.opponentChips + (state.bettingRound?.pot ?? 0)).toBe(4000);
     expect(state.phase).toBe('pre_flop_betting');
     expect(state.isGameOver).toBe(false);
   });
@@ -222,7 +222,7 @@ describe('RESTART_GAME resets everything', () => {
 describe('Game over state', () => {
   test('NEW_GAME is ignored when game is over', () => {
     // Create a state where game is over
-    let state = createExtendedInitialState(1, { playerChips: 0, opponentChips: 200 });
+    let state = createExtendedInitialState(1, { playerChips: 0, opponentChips: 4000 });
     // Force game over state
     state = { ...state, phase: 'game_over', isGameOver: true, gameOverWinner: 'opponent' };
 

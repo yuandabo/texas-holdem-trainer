@@ -1,4 +1,4 @@
-import { View, Text, Button, Switch } from '@tarojs/components';
+import { View, Text, Switch } from '@tarojs/components';
 import { useMemo } from 'react';
 import { useGameFlow } from '@/hooks/useGameFlow';
 import CardDisplay from '@/components/CardDisplay';
@@ -9,12 +9,13 @@ import HandRankHint from '@/components/HandRankHint';
 import { getHandRankHint } from '@/components/HandRankHint/index';
 import WinRateHint from '@/components/WinRateHint';
 import ResultPanel from '@/components/ResultPanel';
+import ActionLog from '@/components/ActionLog';
 import { getAvailableActions } from '@/engine/bettingEngine';
 import { MIN_RAISE } from '@/engine/types';
 import './index.scss';
 
 export default function GamePage() {
-  const { state, nextStep, newGame, toggleHandRankHint, toggleWinRateHint, placeBet, restartGame } = useGameFlow();
+  const { state, toggleHandRankHint, toggleWinRateHint, placeBet, restartGame } = useGameFlow();
 
   const highlightCards = useMemo(() => {
     if (!state.handRankHintEnabled) return undefined;
@@ -33,144 +34,130 @@ export default function GamePage() {
 
   return (
     <View className='game-page'>
-      {/* 对手区域 */}
-      <View className='game-page__opponent-section'>
-        <View className='game-page__avatar'>
-          <Text className='game-page__avatar-emoji'>👩</Text>
+      {/* 主游戏区域 */}
+      <View className='game-page__main'>
+        {/* 对手区域 */}
+        <View className='game-page__opponent-section'>
+          <View className='game-page__avatar'>
+            <Text className='game-page__avatar-emoji'>👩</Text>
+          </View>
+          <View className='game-page__opponent-info'>
+            <Text className='game-page__opponent-name'>Luna</Text>
+            <ChipDisplay label='筹码' amount={state.chipState.opponentChips} />
+          </View>
+          <CardDisplay
+            cards={state.opponentHand}
+            faceDown={state.phase !== 'showdown' || !state.showdownResult}
+          />
         </View>
-        <View className='game-page__opponent-info'>
-          <Text className='game-page__opponent-name'>Luna</Text>
-          <ChipDisplay label='筹码' amount={state.chipState.opponentChips} />
+
+        {/* 公共牌 + 底池 */}
+        <View className='game-page__community-section'>
+          <CardDisplay
+            cards={state.communityCards}
+            totalSlots={5}
+            highlightCards={highlightCards}
+            fullWidth
+          />
+          <ChipDisplay label='底池' amount={state.bettingRound?.pot ?? 0} />
         </View>
-        <CardDisplay
-          cards={state.opponentHand}
-          faceDown={state.phase !== 'showdown' || !state.showdownResult}
-        />
-      </View>
 
-      {/* 公共牌 + 底池 */}
-      <View className='game-page__community-section'>
-        <CardDisplay
-          cards={state.communityCards}
-          totalSlots={5}
-          highlightCards={highlightCards}
-          fullWidth
-        />
-        <ChipDisplay label='底池' amount={state.bettingRound?.pot ?? 0} />
-      </View>
-
-      {/* 玩家区域 */}
-      <View className='game-page__player-row'>
-        <CardDisplay
-          cards={state.playerHand}
-          highlightCards={highlightCards}
-          label='玩家'
-          size='large'
-        />
-        <ChipDisplay label='玩家筹码' amount={state.chipState.playerChips} />
-      </View>
-
-      {/* 提示区域 */}
-      <View className='game-page__hints'>
-        <HandRankHint
-          hand={state.playerHand}
-          communityCards={state.communityCards}
-          enabled={state.handRankHintEnabled}
-        />
-        <WinRateHint
-          hand={state.playerHand}
-          communityCards={state.communityCards}
-          enabled={state.winRateHintEnabled}
-        />
-      </View>
-
-      {/* 结算面板 */}
-      {state.phase === 'showdown' && state.showdownResult && (
-        <ResultPanel result={state.showdownResult} />
-      )}
-
-      {/* 弃牌结算 */}
-      {state.phase === 'showdown' && !state.showdownResult && state.bettingRound?.foldedBy && (
-        <View className='game-page__fold-result'>
-          <Text className={`game-page__fold-text ${state.bettingRound.foldedBy === 'player' ? 'game-page__fold-text--lose' : 'game-page__fold-text--win'}`}>
-            {state.bettingRound.foldedBy === 'player' ? '你弃牌了，对手赢得底池' : '对手弃牌，你赢得底池'}
-          </Text>
+        {/* 玩家区域 */}
+        <View className='game-page__player-row'>
+          <CardDisplay
+            cards={state.playerHand}
+            highlightCards={highlightCards}
+            label='玩家'
+            size='large'
+          />
+          <ChipDisplay label='玩家筹码' amount={state.chipState.playerChips} />
         </View>
-      )}
 
-      {/* 游戏结束面板 */}
-      {state.isGameOver && state.gameOverWinner && (
-        <GameOverPanel
-          winner={state.gameOverWinner}
-          playerChips={state.chipState.playerChips}
-          opponentChips={state.chipState.opponentChips}
-          onRestart={restartGame}
-        />
-      )}
-
-      {/* 回合提示 */}
-      {isBetting && state.bettingRound && !state.bettingRound.roundEnded && (
-        <View className='game-page__turn-indicator'>
-          <Text className='game-page__turn-text'>
-            {state.bettingRound.currentActor === 'player' ? '💬 轮到你行动' : '⏳ 对手思考中...'}
-          </Text>
+        {/* 提示区域 */}
+        <View className='game-page__hints'>
+          <HandRankHint
+            hand={state.playerHand}
+            communityCards={state.communityCards}
+            enabled={state.handRankHintEnabled}
+          />
+          <WinRateHint
+            hand={state.playerHand}
+            communityCards={state.communityCards}
+            enabled={state.winRateHintEnabled}
+          />
         </View>
-      )}
 
-      {/* 下注操作面板 */}
-      {isBetting && (
-        <BettingActionPanel
-          availableActions={availableActions}
-          currentBetToCall={betToCall}
-          minRaiseAmount={betToCall + MIN_RAISE}
-          maxRaiseAmount={state.chipState.playerChips}
-          enabled={isPlayerTurn}
-          onAction={placeBet}
-        />
-      )}
-
-      {/* 操作按钮 - 下一步 */}
-      <View className='game-page__actions'>
-        {!isBetting && !state.isGameOver && (
-          <Button
-            className='game-page__btn game-page__btn--next'
-            disabled={state.phase === 'showdown'}
-            onClick={nextStep}
-          >
-            下一步
-          </Button>
+        {/* 结算面板 */}
+        {state.phase === 'showdown' && state.showdownResult && (
+          <ResultPanel result={state.showdownResult} />
         )}
+
+        {/* 弃牌结算 */}
+        {state.phase === 'showdown' && !state.showdownResult && state.bettingRound?.foldedBy && (
+          <View className='game-page__fold-result'>
+            <Text className={`game-page__fold-text ${state.bettingRound.foldedBy === 'player' ? 'game-page__fold-text--lose' : 'game-page__fold-text--win'}`}>
+              {state.bettingRound.foldedBy === 'player' ? '你弃牌了，对手赢得底池' : '对手弃牌，你赢得底池'}
+            </Text>
+          </View>
+        )}
+
+        {/* 游戏结束面板 */}
+        {state.isGameOver && state.gameOverWinner && (
+          <GameOverPanel
+            winner={state.gameOverWinner}
+            playerChips={state.chipState.playerChips}
+            opponentChips={state.chipState.opponentChips}
+            onRestart={restartGame}
+          />
+        )}
+
+        {/* 回合提示 + 自动发牌倒计时 */}
+        <View className='game-page__status-bar'>
+          {isBetting && state.bettingRound && !state.bettingRound.roundEnded && (
+            <Text className='game-page__turn-text'>
+              {state.bettingRound.currentActor === 'player' ? '💬 轮到你行动' : '⏳ 对手思考中...'}
+            </Text>
+          )}
+          {state.phase === 'showdown' && !state.isGameOver && (
+            <Text className='game-page__auto-deal-text'>⏳ 即将自动发牌...</Text>
+          )}
+        </View>
+
+        {/* 下注操作面板 */}
+        {isBetting && (
+          <BettingActionPanel
+            availableActions={availableActions}
+            currentBetToCall={betToCall}
+            minRaiseAmount={betToCall + MIN_RAISE}
+            maxRaiseAmount={state.chipState.playerChips}
+            enabled={isPlayerTurn}
+            onAction={placeBet}
+          />
+        )}
+
+        {/* 提示开关 */}
+        <View className='game-page__toggles'>
+          <View className='game-page__toggle-item'>
+            <Text className='game-page__toggle-label'>牌型提示</Text>
+            <Switch
+              checked={state.handRankHintEnabled}
+              onChange={toggleHandRankHint}
+            />
+          </View>
+          <View className='game-page__toggle-item'>
+            <Text className='game-page__toggle-label'>胜率提示</Text>
+            <Switch
+              checked={state.winRateHintEnabled}
+              onChange={toggleWinRateHint}
+            />
+          </View>
+        </View>
       </View>
 
-      {/* 提示开关 */}
-      <View className='game-page__toggles'>
-        <View className='game-page__toggle-item'>
-          <Text className='game-page__toggle-label'>牌型提示</Text>
-          <Switch
-            checked={state.handRankHintEnabled}
-            onChange={toggleHandRankHint}
-          />
-        </View>
-        <View className='game-page__toggle-item'>
-          <Text className='game-page__toggle-label'>胜率提示</Text>
-          <Switch
-            checked={state.winRateHintEnabled}
-            onChange={toggleWinRateHint}
-          />
-        </View>
+      {/* 右侧操作日志 */}
+      <View className='game-page__sidebar'>
+        <ActionLog entries={state.actionLog} />
       </View>
-
-      {/* 新一局按钮 - 仅在摊牌结束后可用 */}
-      {!state.isGameOver && state.phase === 'showdown' && (
-        <View className='game-page__actions'>
-          <Button
-            className='game-page__btn game-page__btn--new'
-            onClick={newGame}
-          >
-            新一局
-          </Button>
-        </View>
-      )}
     </View>
   );
 }
