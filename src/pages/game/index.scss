@@ -4,6 +4,13 @@
     background-color: #1a5c2a;
     box-sizing: border-box;
 
+    &__player-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16rpx;
+    }
+
     &__divider {
         height: 2rpx;
         background-color: rgba(255, 255, 255, 0.2);

@@ -1,0 +1,19 @@
+.chip-display {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 4rpx 16rpx;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 20rpx;
+
+  &__label {
+    font-size: 24rpx;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  &__amount {
+    font-size: 28rpx;
+    font-weight: bold;
+    color: #f1c40f;
+  }
+}

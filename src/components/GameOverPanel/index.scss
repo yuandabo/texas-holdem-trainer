@@ -1,0 +1,56 @@
+.game-over-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24rpx;
+  padding: 40rpx 32rpx;
+  background-color: rgba(0, 0, 0, 0.85);
+  border-radius: 16rpx;
+
+  &__title {
+    font-size: 40rpx;
+    font-weight: bold;
+    color: #ffffff;
+  }
+
+  &__winner {
+    font-size: 36rpx;
+    font-weight: bold;
+
+    &--win {
+      color: #2ecc71;
+    }
+
+    &--lose {
+      color: #e74c3c;
+    }
+  }
+
+  &__chips {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8rpx;
+  }
+
+  &__chip-line {
+    font-size: 28rpx;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  &__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20rpx 48rpx;
+    background-color: #f39c12;
+    border-radius: 12rpx;
+    margin-top: 8rpx;
+  }
+
+  &__btn-text {
+    font-size: 30rpx;
+    font-weight: bold;
+    color: #ffffff;
+  }
+}

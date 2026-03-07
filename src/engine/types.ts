@@ -109,3 +109,70 @@ export class EvaluationError extends Error {
     this.name = 'EvaluationError';
   }
 }
+
+// ===== 下注阶段 =====
+export type BettingPhase = 'pre_flop_betting' | 'flop_betting' | 'turn_betting' | 'river_betting';
+
+// ===== 扩展游戏阶段（含下注子阶段和游戏结束） =====
+export type ExtendedGamePhase = GamePhase | BettingPhase | 'game_over';
+
+// ===== 下注操作类型 =====
+export type BettingActionType = 'check' | 'call' | 'raise' | 'fold' | 'all_in';
+
+// ===== 下注操作 =====
+export interface BettingAction {
+  type: BettingActionType;
+  amount: number;
+}
+
+// ===== 筹码状态 =====
+export interface ChipState {
+  playerChips: number;
+  opponentChips: number;
+}
+
+// ===== 下注回合状态 =====
+export interface BettingRoundState {
+  pot: number;
+  playerRoundBet: number;
+  opponentRoundBet: number;
+  currentActor: 'player' | 'opponent';
+  playerActed: boolean;
+  opponentActed: boolean;
+  roundEnded: boolean;
+  foldedBy: 'player' | 'opponent' | null;
+  lastRaiseAmount: number;
+}
+
+// ===== 扩展游戏状态（含筹码和下注） =====
+export interface ExtendedGameStateData extends Omit<GameStateData, 'phase'> {
+  phase: ExtendedGamePhase;
+  chipState: ChipState;
+  bettingRound: BettingRoundState | null;
+  handNumber: number;
+  isGameOver: boolean;
+  gameOverWinner: 'player' | 'opponent' | null;
+}
+
+// ===== 下注错误 =====
+export class BettingError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'BettingError';
+  }
+}
+
+// ===== 筹码错误 =====
+export class ChipError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'ChipError';
+  }
+}
+
+// ===== 下注系统常量 =====
+export const INITIAL_CHIPS = 100;
+export const SMALL_BLIND_AMOUNT = 1;
+export const BIG_BLIND_AMOUNT = 2;
+export const MIN_RAISE = 2;
+export const AI_DELAY_MS = 500;

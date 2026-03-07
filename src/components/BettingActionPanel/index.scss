@@ -1,0 +1,90 @@
+.betting-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  padding: 16rpx;
+
+  &__buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16rpx;
+    flex-wrap: wrap;
+  }
+
+  &__btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16rpx 28rpx;
+    border-radius: 12rpx;
+    min-width: 140rpx;
+
+    &--check {
+      background-color: #27ae60;
+    }
+
+    &--call {
+      background-color: #2980b9;
+    }
+
+    &--allin {
+      background-color: #e74c3c;
+    }
+
+    &--raise {
+      background-color: #f39c12;
+    }
+
+    &--fold {
+      background-color: #7f8c8d;
+    }
+
+    &--confirm {
+      background-color: #f39c12;
+      flex: 1;
+    }
+
+    &--cancel {
+      background-color: #7f8c8d;
+    }
+
+    &--disabled {
+      opacity: 0.4;
+    }
+  }
+
+  &__btn-text {
+    font-size: 28rpx;
+    font-weight: bold;
+    color: #ffffff;
+  }
+
+  &__raise-input {
+    display: flex;
+    flex-direction: column;
+    gap: 12rpx;
+    padding: 16rpx;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 12rpx;
+  }
+
+  &__raise-header {
+    display: flex;
+    justify-content: center;
+  }
+
+  &__raise-label {
+    font-size: 28rpx;
+    color: #f1c40f;
+    font-weight: bold;
+  }
+
+  &__slider {
+    margin: 8rpx 0;
+  }
+
+  &__raise-actions {
+    display: flex;
+    gap: 16rpx;
+  }
+}
