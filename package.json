@@ -4,7 +4,7 @@
     "private": true,
     "description": "德州扑克模拟训练器",
     "engines": {
-        "node": "24.x"
+        "node": ">=18 || 24.x"
     },
     "templateInfo": {
         "name": "default",

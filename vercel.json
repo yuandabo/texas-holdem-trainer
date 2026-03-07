@@ -2,7 +2,7 @@
   "buildCommand": "npm run build:h5",
   "outputDirectory": "dist",
   "framework": null,
-  "installCommand": "npm install --legacy-peer-deps",
+  "installCommand": "npm install --force",
   "routes": [
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
