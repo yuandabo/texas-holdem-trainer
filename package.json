@@ -50,7 +50,7 @@
         "babel-preset-taro": "^4.1.11",
         "fast-check": "^3.22.0",
         "jest": "^29.7.0",
-        "react-refresh": "^0.18.0",
+        "react-refresh": "^0.14.0",
         "sass": "^1.77.0",
         "ts-jest": "^29.2.0",
         "typescript": "^5.4.0"
