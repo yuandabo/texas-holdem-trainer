@@ -2,22 +2,23 @@
   display: flex;
   flex-direction: column;
   gap: 16rpx;
-  padding: 16rpx;
+  padding: 12rpx 0;
 
   &__buttons {
     display: flex;
     justify-content: center;
-    gap: 16rpx;
-    flex-wrap: wrap;
+    gap: 12rpx;
   }
 
   &__btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 16rpx 28rpx;
+    padding: 16rpx 24rpx;
     border-radius: 12rpx;
-    min-width: 140rpx;
+    min-width: 130rpx;
+    flex: 1;
+    max-width: 220rpx;
 
     &--check {
       background-color: #27ae60;
@@ -42,10 +43,12 @@
     &--confirm {
       background-color: #f39c12;
       flex: 1;
+      max-width: none;
     }
 
     &--cancel {
       background-color: #7f8c8d;
+      max-width: none;
     }
 
     &--disabled {
@@ -57,6 +60,7 @@
     font-size: 28rpx;
     font-weight: bold;
     color: #ffffff;
+    white-space: nowrap;
   }
 
   &__raise-input {

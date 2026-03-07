@@ -177,6 +177,41 @@ function advanceAfterBettingComplete(state: ExtendedGameStateData): ExtendedGame
   const currentPot = state.bettingRound?.pot ?? 0;
   const smallBlind = getSmallBlind(state.handNumber);
 
+  // If either player is all-in (0 chips), skip remaining betting rounds:
+  // deal all remaining community cards and go straight to showdown.
+  const anyAllIn = state.chipState.playerChips === 0 || state.chipState.opponentChips === 0;
+
+  if (anyAllIn) {
+    let communityCards = [...state.communityCards];
+    let deck = state.remainingDeck;
+
+    // Deal remaining community cards based on current phase
+    if (state.phase === 'pre_flop_betting' || state.phase === 'flop_betting' || state.phase === 'turn_betting') {
+      if (communityCards.length < 3) {
+        const [flopCards, deckAfterFlop] = dealFlop(deck);
+        communityCards = [...communityCards, ...flopCards];
+        deck = deckAfterFlop;
+      }
+      if (communityCards.length < 4) {
+        const [turnCard, deckAfterTurn] = dealTurn(deck);
+        communityCards = [...communityCards, turnCard];
+        deck = deckAfterTurn;
+      }
+      if (communityCards.length < 5) {
+        const [riverCard, deckAfterRiver] = dealRiver(deck);
+        communityCards = [...communityCards, riverCard];
+        deck = deckAfterRiver;
+      }
+    }
+
+    return handleShowdownSettlement({
+      ...state,
+      communityCards,
+      remainingDeck: deck,
+      bettingRound: state.bettingRound ? { ...state.bettingRound, pot: currentPot } : state.bettingRound,
+    });
+  }
+
   switch (state.phase) {
     case 'pre_flop_betting': {
       // Deal flop → enter flop_betting
@@ -226,6 +261,7 @@ function advanceAfterBettingComplete(state: ExtendedGameStateData): ExtendedGame
       return state;
   }
 }
+
 
 /**
  * 处理下注操作（玩家或对手），返回更新后的状态。

@@ -8,6 +8,8 @@ export interface CardDisplayProps {
   totalSlots?: number;
   highlightCards?: Card[];
   label?: string;
+  size?: 'normal' | 'large';
+  fullWidth?: boolean;
 }
 
 const SUIT_SYMBOLS: Record<Suit, string> = {
@@ -42,7 +44,7 @@ function isHighlighted(card: Card, highlightCards?: Card[]): boolean {
   return highlightCards.some(h => h.suit === card.suit && h.rank === card.rank);
 }
 
-export default function CardDisplay({ cards, faceDown, totalSlots, highlightCards, label }: CardDisplayProps) {
+export default function CardDisplay({ cards, faceDown, totalSlots, highlightCards, label, size = 'normal', fullWidth = false }: CardDisplayProps) {
   const slots = totalSlots ?? cards.length;
   const items: Array<{ type: 'card'; card: Card } | { type: 'placeholder' }> = [];
 
@@ -55,13 +57,13 @@ export default function CardDisplay({ cards, faceDown, totalSlots, highlightCard
   }
 
   return (
-    <View className='card-display'>
+    <View className={`card-display ${fullWidth ? 'card-display--full' : ''}`}>
       {label && <Text className='card-display__label'>{label}</Text>}
-      <View className='card-display__row'>
+      <View className={`card-display__row ${size === 'large' ? 'card-display__row--large' : ''} ${fullWidth ? 'card-display__row--full' : ''}`}>
         {items.map((item, index) => {
           if (item.type === 'placeholder' || faceDown) {
             return (
-              <View key={index} className='card-display__card card-display__card--back'>
+              <View key={index} className={`card-display__card card-display__card--back ${size === 'large' ? 'card-display__card--large' : ''} ${fullWidth ? 'card-display__card--full-width' : ''}`}>
                 <View className='card-display__back-pattern' />
               </View>
             );
@@ -74,6 +76,8 @@ export default function CardDisplay({ cards, faceDown, totalSlots, highlightCard
             'card-display__card',
             red ? 'card-display__card--red' : 'card-display__card--black',
             highlighted ? 'card-display__card--highlight' : '',
+            size === 'large' ? 'card-display__card--large' : '',
+            fullWidth ? 'card-display__card--full-width' : '',
           ].filter(Boolean).join(' ');
 
           return (

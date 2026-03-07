@@ -26,7 +26,7 @@ export function createBettingRound(
 }
 
 /** 检查下注回合是否应该结束 */
-export function isRoundComplete(roundState: BettingRoundState): boolean {
+export function isRoundComplete(roundState: BettingRoundState, chipState?: ChipState): boolean {
   if (roundState.foldedBy !== null) {
     return true;
   }
@@ -34,6 +34,16 @@ export function isRoundComplete(roundState: BettingRoundState): boolean {
     roundState.playerActed &&
     roundState.opponentActed &&
     roundState.playerRoundBet === roundState.opponentRoundBet
+  ) {
+    return true;
+  }
+  // If both players have acted and either is all-in (0 chips), the round is complete
+  // even if bets aren't equal (side pot scenario)
+  if (
+    chipState &&
+    roundState.playerActed &&
+    roundState.opponentActed &&
+    (chipState.playerChips === 0 || chipState.opponentChips === 0)
   ) {
     return true;
   }
@@ -65,9 +75,9 @@ export function getAvailableActions(
     }
   } else {
     if (actorChips <= minRaise) {
-      return ['check', 'all_in'];
+      return ['check', 'all_in', 'fold'];
     } else {
-      return ['check', 'raise'];
+      return ['check', 'raise', 'fold'];
     }
   }
 }
@@ -161,9 +171,17 @@ export function executeBettingAction(
       if (actor === 'player') {
         newRoundState.playerRoundBet += actorChips;
         newRoundState.playerActed = true;
+        // If all-in exceeds opponent's bet (like a raise), reset opponent's acted flag
+        if (newRoundState.playerRoundBet > newRoundState.opponentRoundBet) {
+          newRoundState.opponentActed = false;
+        }
       } else {
         newRoundState.opponentRoundBet += actorChips;
         newRoundState.opponentActed = true;
+        // If all-in exceeds player's bet (like a raise), reset player's acted flag
+        if (newRoundState.opponentRoundBet > newRoundState.playerRoundBet) {
+          newRoundState.playerActed = false;
+        }
       }
       newRoundState.currentActor = switchActor(actor);
       break;
@@ -171,7 +189,7 @@ export function executeBettingAction(
   }
 
   // After any non-fold action, check if round is complete
-  if (isRoundComplete(newRoundState)) {
+  if (isRoundComplete(newRoundState, newChipState)) {
     newRoundState.roundEnded = true;
   }
 

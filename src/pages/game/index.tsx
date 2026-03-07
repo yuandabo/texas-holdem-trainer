@@ -33,36 +33,39 @@ export default function GamePage() {
 
   return (
     <View className='game-page'>
-      {/* 对手手牌区域 */}
-      <View className='game-page__player-row'>
+      {/* 对手区域 */}
+      <View className='game-page__opponent-section'>
+        <View className='game-page__avatar'>
+          <Text className='game-page__avatar-emoji'>👩</Text>
+        </View>
+        <View className='game-page__opponent-info'>
+          <Text className='game-page__opponent-name'>Luna</Text>
+          <ChipDisplay label='筹码' amount={state.chipState.opponentChips} />
+        </View>
         <CardDisplay
           cards={state.opponentHand}
           faceDown={state.phase !== 'showdown' || !state.showdownResult}
-          label='对手'
         />
-        <ChipDisplay label='对手筹码' amount={state.chipState.opponentChips} />
       </View>
 
-      <View className='game-page__divider' />
+      {/* 公共牌 + 底池 */}
+      <View className='game-page__community-section'>
+        <CardDisplay
+          cards={state.communityCards}
+          totalSlots={5}
+          highlightCards={highlightCards}
+          fullWidth
+        />
+        <ChipDisplay label='底池' amount={state.bettingRound?.pot ?? 0} />
+      </View>
 
-      {/* 公共牌区域 */}
-      <CardDisplay
-        cards={state.communityCards}
-        totalSlots={5}
-        highlightCards={highlightCards}
-      />
-
-      {/* 底池筹码 */}
-      <ChipDisplay label='底池' amount={state.bettingRound?.pot ?? 0} />
-
-      <View className='game-page__divider' />
-
-      {/* 玩家手牌区域 */}
+      {/* 玩家区域 */}
       <View className='game-page__player-row'>
         <CardDisplay
           cards={state.playerHand}
           highlightCards={highlightCards}
           label='玩家'
+          size='large'
         />
         <ChipDisplay label='玩家筹码' amount={state.chipState.playerChips} />
       </View>
@@ -86,6 +89,15 @@ export default function GamePage() {
         <ResultPanel result={state.showdownResult} />
       )}
 
+      {/* 弃牌结算 */}
+      {state.phase === 'showdown' && !state.showdownResult && state.bettingRound?.foldedBy && (
+        <View className='game-page__fold-result'>
+          <Text className={`game-page__fold-text ${state.bettingRound.foldedBy === 'player' ? 'game-page__fold-text--lose' : 'game-page__fold-text--win'}`}>
+            {state.bettingRound.foldedBy === 'player' ? '你弃牌了，对手赢得底池' : '对手弃牌，你赢得底池'}
+          </Text>
+        </View>
+      )}
+
       {/* 游戏结束面板 */}
       {state.isGameOver && state.gameOverWinner && (
         <GameOverPanel
@@ -94,6 +106,15 @@ export default function GamePage() {
           opponentChips={state.chipState.opponentChips}
           onRestart={restartGame}
         />
+      )}
+
+      {/* 回合提示 */}
+      {isBetting && state.bettingRound && !state.bettingRound.roundEnded && (
+        <View className='game-page__turn-indicator'>
+          <Text className='game-page__turn-text'>
+            {state.bettingRound.currentActor === 'player' ? '💬 轮到你行动' : '⏳ 对手思考中...'}
+          </Text>
+        </View>
       )}
 
       {/* 下注操作面板 */}
@@ -139,8 +160,8 @@ export default function GamePage() {
         </View>
       </View>
 
-      {/* 新一局按钮 */}
-      {!state.isGameOver && (
+      {/* 新一局按钮 - 仅在摊牌结束后可用 */}
+      {!state.isGameOver && state.phase === 'showdown' && (
         <View className='game-page__actions'>
           <Button
             className='game-page__btn game-page__btn--new'

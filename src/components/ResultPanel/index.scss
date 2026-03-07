@@ -24,6 +24,12 @@
         }
     }
 
+    &__winner-rank {
+        font-size: 30rpx;
+        font-weight: bold;
+        color: #f1c40f;
+    }
+
     &__hands {
         display: flex;
         flex-direction: column;

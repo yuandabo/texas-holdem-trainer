@@ -2,7 +2,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
+    flex-shrink: 0;
+
+    &--full {
+        width: 100%;
+    }
 
     &__label {
         font-size: 24rpx;
@@ -15,6 +19,15 @@
         flex-direction: row;
         justify-content: center;
         gap: 12rpx;
+
+        &--large {
+            gap: 16rpx;
+        }
+
+        &--full {
+            width: 100%;
+            gap: 10rpx;
+        }
     }
 
     &__card {
@@ -27,7 +40,18 @@
         justify-content: center;
         border: 2rpx solid #ddd;
         background-color: #fff;
-        box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+
+        &--full-width {
+            width: auto;
+            height: 180rpx;
+            flex: 1;
+        }
+
+        &--large {
+            width: 120rpx;
+            height: 168rpx;
+        }
 
         &--red {
             color: #e74c3c;
@@ -58,6 +82,22 @@
         font-size: 28rpx;
         line-height: 1;
         margin-top: 4rpx;
+    }
+
+    &__card--large &__rank {
+        font-size: 44rpx;
+    }
+
+    &__card--large &__suit {
+        font-size: 38rpx;
+    }
+
+    &__card--full-width &__rank {
+        font-size: 40rpx;
+    }
+
+    &__card--full-width &__suit {
+        font-size: 34rpx;
     }
 
     &__back-pattern {

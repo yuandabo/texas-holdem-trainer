@@ -3,3 +3,4 @@ dist/
 .swc/
 *.log
 .DS_Store
+.vercel
