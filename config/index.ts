@@ -35,7 +35,7 @@ export default defineConfig<'webpack5'>({
     },
   },
   h5: {
-    publicPath: './',
+    publicPath: '/',
     staticDirectory: 'static',
     output: {
       filename: 'js/[name].[hash:8].js',
