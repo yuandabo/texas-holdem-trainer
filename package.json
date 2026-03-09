@@ -2,7 +2,19 @@
     "name": "texas-holdem-trainer",
     "version": "1.0.0",
     "private": true,
-    "description": "德州扑克模拟训练器",
+    "description": "德州扑克模拟训练器 - 在线学习德州扑克规则与策略 | Texas Hold'em Poker Trainer",
+    "keywords": [
+        "texas-holdem",
+        "poker",
+        "trainer",
+        "德州扑克",
+        "扑克训练器",
+        "taro",
+        "react",
+        "wechat-miniprogram"
+    ],
+    "author": "Texas Hold'em Trainer",
+    "license": "MIT",
     "engines": {
         "node": ">=18 || 24.x"
     },

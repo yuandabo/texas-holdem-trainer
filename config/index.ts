@@ -16,7 +16,7 @@ export default defineConfig<'webpack5'>({
   outputRoot: 'dist',
   plugins: ['@tarojs/plugin-framework-react', '@tarojs/plugin-platform-h5'],
   defineConstants: {},
-  copy: { patterns: [], options: {} },
+  copy: { patterns: [{ from: 'src/robots.txt', to: 'dist/robots.txt' }], options: {} },
   framework: 'react',
   compiler: 'webpack5',
   alias: {
