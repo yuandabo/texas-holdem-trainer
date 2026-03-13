@@ -480,6 +480,7 @@ export function useGameFlow(): ExtendedUseGameFlowReturn {
         const decision = makeDecision(
           state.bettingRound!,
           state.chipState.opponentChips,
+          state.chipState.playerChips,
           MIN_RAISE,
           Math.random,
         );

@@ -55,7 +55,7 @@ export default function GamePage() {
           </View>
           <CardDisplay
             cards={state.opponentHand}
-            faceDown={state.phase !== 'showdown' || !state.showdownResult}
+            faceDown={!state.showdownResult}
           />
         </View>
 
@@ -142,7 +142,8 @@ export default function GamePage() {
             availableActions={availableActions}
             currentBetToCall={betToCall}
             minRaiseAmount={betToCall + MIN_RAISE}
-            maxRaiseAmount={state.chipState.playerChips}
+            maxRaiseAmount={Math.min(state.chipState.playerChips, state.chipState.opponentChips)}
+            potSize={state.bettingRound?.pot ?? 0}
             enabled={isPlayerTurn}
             onAction={placeBet}
           />

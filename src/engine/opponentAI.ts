@@ -19,18 +19,22 @@ export interface AIDecision {
 export function makeDecision(
   roundState: BettingRoundState,
   opponentChips: number,
+  playerChips: number,
   minRaise: number,
   rng: RandomGenerator,
 ): AIDecision {
   const betToCall = roundState.playerRoundBet - roundState.opponentRoundBet;
   const r = rng();
+  // AI 加注不能超过对方（玩家）的筹码
+  const maxRaise = Math.min(opponentChips, playerChips);
 
   if (betToCall <= 0) {
     // No unmatched bet
     if (r < 0.7) {
       return { action: { type: 'check', amount: 0 } };
     }
-    return { action: { type: 'raise', amount: minRaise } };
+    const raiseAmt = Math.min(minRaise, maxRaise);
+    return { action: { type: 'raise', amount: raiseAmt } };
   }
 
   // Unmatched bet exists
@@ -42,12 +46,22 @@ export function makeDecision(
     return { action: { type: 'fold', amount: 0 } };
   }
 
-  // Can afford to call
+  // Can afford to call — but if opponent is all-in (playerChips === 0),
+  // we can only call or fold, no raise possible.
+  if (playerChips === 0 || opponentChips <= betToCall) {
+    if (r < 0.8) {
+      return { action: { type: 'call', amount: betToCall } };
+    }
+    return { action: { type: 'fold', amount: 0 } };
+  }
+
+  // Can afford to call and raise is possible
   if (r < 0.6) {
     return { action: { type: 'call', amount: betToCall } };
   }
   if (r < 0.8) {
-    return { action: { type: 'raise', amount: betToCall + minRaise } };
+    const raiseAmt = Math.min(betToCall + minRaise, maxRaise);
+    return { action: { type: 'raise', amount: raiseAmt } };
   }
   return { action: { type: 'fold', amount: 0 } };
 }

@@ -5,6 +5,8 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
 
     // --- 主游戏区域 ---
     &__main {

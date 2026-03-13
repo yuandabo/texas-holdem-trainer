@@ -20,7 +20,7 @@ test('AI decision maps deterministically from RNG value when no unmatched bet', 
           foldedBy: null,
           lastRaiseAmount: 0,
         };
-        const decision = makeDecision(roundState, 50, 2, () => r);
+        const decision = makeDecision(roundState, 50, 100, 2, () => r);
         if (r < 0.7) {
           expect(decision.action.type).toBe('check');
         } else {
@@ -48,7 +48,7 @@ test('AI decision maps deterministically from RNG value when unmatched bet exist
           foldedBy: null,
           lastRaiseAmount: 0,
         };
-        const decision = makeDecision(roundState, 50, 2, () => r);
+        const decision = makeDecision(roundState, 50, 100, 2, () => r);
         if (r < 0.6) {
           expect(decision.action.type).toBe('call');
         } else if (r < 0.8) {

@@ -28,7 +28,10 @@
         "dev:weapp": "taro build --type weapp --watch",
         "test": "jest",
         "build:h5": "taro build --type h5",
-        "dev:h5": "taro build --type h5 --watch"
+        "dev:h5": "taro build --type h5 --watch",
+        "build:android": "taro build --type h5 && npx cap sync android",
+        "build:apk": "npm run build:android && cd android && gradlew.bat assembleDebug",
+        "build:apk:release": "npm run build:android && cd android && gradlew.bat assembleRelease"
     },
     "browserslist": [
         "last 3 versions",
@@ -36,6 +39,8 @@
         "ios >= 8"
     ],
     "dependencies": {
+        "@capacitor/android": "^8.2.0",
+        "@capacitor/core": "^8.2.0",
         "@tarojs/components": "4.1.11",
         "@tarojs/helper": "4.1.11",
         "@tarojs/plugin-framework-react": "4.1.11",
@@ -53,6 +58,7 @@
         "@babel/preset-env": "^7.24.0",
         "@babel/preset-react": "^7.24.0",
         "@babel/preset-typescript": "^7.24.0",
+        "@capacitor/cli": "^8.2.0",
         "@pmmmwh/react-refresh-webpack-plugin": "^0.6.2",
         "@tarojs/cli": "4.1.11",
         "@tarojs/webpack5-runner": "4.1.11",

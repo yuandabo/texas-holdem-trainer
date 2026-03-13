@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "Generate Git Message",
+  "description": "每次 AI 执行完成后，自动根据当前 git diff 生成一条简洁的 git commit message",
+  "version": "1",
+  "when": {
+    "type": "agentStop"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "请查看当前的 #Git Diff，根据变更内容生成一条简洁、规范的 git commit message（使用 Conventional Commits 格式）。只输出 commit message，不要额外解释。如果没有任何变更，则不需要输出。"
+  }
+}
