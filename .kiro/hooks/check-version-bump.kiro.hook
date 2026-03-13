@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "检查版本号更新",
+  "description": "每次任务执行完成后，自动分析本次变更内容，判断 package.json 中的版本号是否需要更新（遵循 semver 规范：bug fix → patch，新功能 → minor，破坏性变更 → major），并给出建议。",
+  "version": "1",
+  "when": {
+    "type": "postTaskExecution"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "请检查刚才完成的任务中所做的代码变更，判断是否需要更新 package.json 中的 version 字段。分析规则：\n1. 如果只是修复 bug、重构、文档更新、代码风格调整等，建议 patch 版本号升级（如 1.0.0 → 1.0.1）\n2. 如果新增了功能或特性，建议 minor 版本号升级（如 1.0.0 → 1.1.0）\n3. 如果有破坏性变更（API 变动、删除功能等），建议 major 版本号升级（如 1.0.0 → 2.0.0）\n4. 如果变更仅涉及配置、hooks、steering 等非功能性文件，则不需要更新版本号\n\n请先读取当前 package.json 的版本号，然后根据变更内容给出是否需要升级以及建议的新版本号。如果需要升级，询问用户是否要自动更新。"
+  }
+}
