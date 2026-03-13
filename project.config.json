@@ -1,15 +1,39 @@
 {
-    "miniprogramRoot": "dist/",
-    "projectname": "texas-holdem-trainer",
-    "description": "德州扑克模拟训练器",
-    "appid": "touristappid",
-    "setting": {
-        "urlCheck": true,
-        "es6": false,
-        "enhance": false,
-        "compileHotReLoad": false,
-        "postcss": false,
-        "minified": false
-    },
-    "compileType": "miniprogram"
+  "miniprogramRoot": "dist/",
+  "projectname": "texas-holdem-trainer",
+  "description": "德州扑克模拟训练器",
+  "appid": "wx7741f3594d2a8b9c",
+  "setting": {
+    "urlCheck": true,
+    "es6": false,
+    "enhance": false,
+    "compileHotReLoad": false,
+    "postcss": false,
+    "minified": false,
+    "compileWorklet": false,
+    "uglifyFileName": false,
+    "uploadWithSourceMap": true,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXSS": true,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
+  },
+  "compileType": "miniprogram",
+  "simulatorPluginLibVersion": {},
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "editorSetting": {}
 }

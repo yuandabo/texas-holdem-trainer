@@ -9,7 +9,6 @@ import HandRankHint from '@/components/HandRankHint';
 import { getHandRankHint } from '@/components/HandRankHint/index';
 import WinRateHint from '@/components/WinRateHint';
 import ResultPanel from '@/components/ResultPanel';
-import ActionLog from '@/components/ActionLog';
 import { getAvailableActions } from '@/engine/bettingEngine';
 import { MIN_RAISE } from '@/engine/types';
 import './index.scss';
@@ -32,6 +31,10 @@ export default function GamePage() {
     ? Math.max(0, state.bettingRound.opponentRoundBet - state.bettingRound.playerRoundBet)
     : 0;
 
+  // 获取各自最新一条操作
+  const lastOpponentAction = [...state.actionLog].reverse().find(e => e.actor === 'opponent');
+  const lastPlayerAction = [...state.actionLog].reverse().find(e => e.actor === 'player');
+
   return (
     <View className='game-page'>
       {/* 主游戏区域 */}
@@ -41,6 +44,11 @@ export default function GamePage() {
           <View className='game-page__avatar'>
             <Text className='game-page__avatar-emoji'>👩</Text>
           </View>
+          {lastOpponentAction && (
+            <View className='game-page__action-bubble game-page__action-bubble--opponent'>
+              <Text className='game-page__action-bubble-text'>{lastOpponentAction.actionType}</Text>
+            </View>
+          )}
           <View className='game-page__opponent-info'>
             <Text className='game-page__opponent-name'>Luna</Text>
             <ChipDisplay label='筹码' amount={state.chipState.opponentChips} />
@@ -71,6 +79,11 @@ export default function GamePage() {
             size='large'
           />
           <ChipDisplay label='玩家筹码' amount={state.chipState.playerChips} />
+          {lastPlayerAction && (
+            <View className='game-page__action-bubble game-page__action-bubble--player'>
+              <Text className='game-page__action-bubble-text'>{lastPlayerAction.actionType}</Text>
+            </View>
+          )}
         </View>
 
         {/* 提示区域 */}
@@ -154,10 +167,6 @@ export default function GamePage() {
         </View>
       </View>
 
-      {/* 右侧操作日志 */}
-      <View className='game-page__sidebar'>
-        <ActionLog entries={state.actionLog} />
-      </View>
     </View>
   );
 }

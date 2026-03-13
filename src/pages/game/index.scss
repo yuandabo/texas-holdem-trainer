@@ -3,7 +3,7 @@
     background-color: #1a5c2a;
     box-sizing: border-box;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     overflow: hidden;
 
     // --- 主游戏区域 ---
@@ -16,15 +16,30 @@
         overflow: hidden;
     }
 
-    // --- 右侧操作日志 ---
-    &__sidebar {
-        width: 240rpx;
-        display: flex;
-        flex-direction: column;
-        padding: 16rpx 12rpx;
-        background-color: rgba(0, 0, 0, 0.2);
-        border-left: 1rpx solid rgba(255, 255, 255, 0.1);
-        overflow: hidden;
+    // --- 右侧操作日志（已移除，改为气泡） ---
+
+    // --- 操作气泡 ---
+    &__action-bubble {
+        padding: 6rpx 16rpx;
+        border-radius: 20rpx;
+        max-width: 200rpx;
+        flex-shrink: 0;
+        animation: bubbleFadeIn 0.3s ease;
+
+        &--opponent {
+            background-color: rgba(231, 76, 60, 0.85);
+        }
+
+        &--player {
+            background-color: rgba(46, 204, 113, 0.85);
+        }
+    }
+
+    &__action-bubble-text {
+        font-size: 22rpx;
+        color: #fff;
+        font-weight: bold;
+        white-space: nowrap;
     }
 
     // --- 对手区域 ---
@@ -161,5 +176,18 @@
     &__toggle-label {
         font-size: 24rpx;
         color: rgba(255, 255, 255, 0.85);
+    }
+}
+
+
+@keyframes bubbleFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
     }
 }
