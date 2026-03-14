@@ -9,7 +9,7 @@ import ResultPanel from '@/components/ResultPanel';
 import { MIN_RAISE } from '@/engine/types';
 import './index.scss';
 
-export default function PvpPage() {
+export default function PvpPage({ onBack }: { onBack?: () => void }) {
   const { status, roomCode, gameState, errorMsg, createRoom, joinRoom, placeBet, restartGame } = usePvpGame();
   const [inputCode, setInputCode] = useState('');
 
@@ -29,6 +29,7 @@ export default function PvpPage() {
             />
             <Button className='pvp-page__btn' onClick={() => joinRoom(inputCode)}>加入房间</Button>
           </View>
+          {onBack && <Button className='pvp-page__btn pvp-page__btn--back' onClick={onBack}>返回训练模式</Button>}
           {errorMsg && <Text className='pvp-page__error'>{errorMsg}</Text>}
         </View>
       </View>

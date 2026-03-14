@@ -1,6 +1,5 @@
 import { View, Text, Switch } from '@tarojs/components';
-import Taro from '@tarojs/taro';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useGameFlow } from '@/hooks/useGameFlow';
 import CardDisplay from '@/components/CardDisplay';
 import ChipDisplay from '@/components/ChipDisplay';
@@ -10,12 +9,19 @@ import HandRankHint from '@/components/HandRankHint';
 import { getHandRankHint } from '@/components/HandRankHint/index';
 import WinRateHint from '@/components/WinRateHint';
 import ResultPanel from '@/components/ResultPanel';
+import PvpPage from '@/pages/pvp/index';
 import { getAvailableActions } from '@/engine/bettingEngine';
 import { MIN_RAISE } from '@/engine/types';
 import './index.scss';
 
 export default function GamePage() {
+  const [mode, setMode] = useState<'ai' | 'pvp'>('ai');
   const { state, toggleHandRankHint, toggleWinRateHint, placeBet, restartGame } = useGameFlow();
+
+  // PVP 模式
+  if (mode === 'pvp') {
+    return <PvpPage onBack={() => setMode('ai')} />;
+  }
 
   const highlightCards = useMemo(() => {
     if (!state.handRankHintEnabled) return undefined;
@@ -169,7 +175,7 @@ export default function GamePage() {
           <View className='game-page__toggle-item'>
             <Text
               className='game-page__toggle-label game-page__pvp-btn'
-              onClick={() => Taro.navigateTo({ url: '/pages/pvp/index' })}
+              onClick={() => setMode('pvp')}
             >🎮 PVP 对战</Text>
           </View>
         </View>
