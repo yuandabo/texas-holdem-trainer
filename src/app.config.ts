@@ -1,5 +1,5 @@
 export default defineAppConfig({
-  pages: ['pages/game/index'],
+  pages: ['pages/game/index', 'pages/pvp/index'],
   window: {
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#fff',

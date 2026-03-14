@@ -1,0 +1,115 @@
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { io, Socket } from 'socket.io-client';
+import { BettingAction } from '@/engine/types';
+
+const SERVER_URL = process.env.TARO_APP_PVP_SERVER || 'http://localhost:3001';
+
+export type PvpStatus = 'idle' | 'creating' | 'joining' | 'waiting' | 'playing' | 'disconnected' | 'error';
+
+export interface PvpGameState {
+  roomCode: string;
+  myRole: 'player' | 'opponent';
+  myHand: any[];
+  opponentHand: any[] | null;
+  phase: string;
+  communityCards: any[];
+  chipState: { playerChips: number; opponentChips: number };
+  bettingRound: any;
+  handNumber: number;
+  isGameOver: boolean;
+  gameOverWinner: string | null;
+  actionLog: any[];
+  showdownResult: any;
+  currentActor: string | null;
+  availableActions: string[];
+  opponentConnected: boolean;
+}
+
+export interface UsePvpGameReturn {
+  status: PvpStatus;
+  roomCode: string;
+  gameState: PvpGameState | null;
+  errorMsg: string;
+  createRoom: () => void;
+  joinRoom: (code: string) => void;
+  placeBet: (action: BettingAction) => void;
+  restartGame: () => void;
+}
+
+export function usePvpGame(): UsePvpGameReturn {
+  const [status, setStatus] = useState<PvpStatus>('idle');
+  const [roomCode, setRoomCode] = useState('');
+  const [gameState, setGameState] = useState<PvpGameState | null>(null);
+  const [errorMsg, setErrorMsg] = useState('');
+  const socketRef = useRef<Socket | null>(null);
+  const socketIdRef = useRef<string>('');
+
+  useEffect(() => {
+    const socket = io(SERVER_URL, { autoConnect: false, transports: ['websocket'] });
+    socketRef.current = socket;
+
+    socket.on('connect', () => {
+      socketIdRef.current = socket.id || '';
+      // 尝试断线重连
+      const savedRoom = localStorage.getItem('pvp_room');
+      const savedSocketId = localStorage.getItem('pvp_socket_id');
+      if (savedRoom && savedSocketId && savedSocketId !== socket.id) {
+        socket.emit('reconnect', { roomCode: savedRoom, oldSocketId: savedSocketId });
+      }
+      localStorage.setItem('pvp_socket_id', socket.id || '');
+    });
+
+    socket.on('roomCreated', (data: { roomCode: string; role: string }) => {
+      setRoomCode(data.roomCode);
+      setStatus('waiting');
+      localStorage.setItem('pvp_room', data.roomCode);
+    });
+
+    socket.on('roomJoined', (data: { roomCode: string; role: string }) => {
+      setRoomCode(data.roomCode);
+      setStatus('waiting');
+      localStorage.setItem('pvp_room', data.roomCode);
+    });
+
+    socket.on('gameState', (state: PvpGameState) => {
+      setGameState(state);
+      setStatus('playing');
+    });
+
+    socket.on('reconnected', () => { setStatus('playing'); });
+    socket.on('opponentDisconnected', () => { setErrorMsg('对手断线，等待重连...'); });
+    socket.on('opponentAbandoned', () => { setErrorMsg('对手已离开'); setStatus('idle'); });
+    socket.on('error', (data: { message: string }) => { setErrorMsg(data.message); });
+    socket.on('disconnect', () => { if (status === 'playing') setStatus('disconnected'); });
+
+    return () => { socket.disconnect(); };
+  }, []);
+
+  const createRoom = useCallback(() => {
+    const socket = socketRef.current;
+    if (!socket) return;
+    if (!socket.connected) socket.connect();
+    setStatus('creating');
+    setErrorMsg('');
+    socket.emit('createRoom');
+  }, []);
+
+  const joinRoom = useCallback((code: string) => {
+    const socket = socketRef.current;
+    if (!socket) return;
+    if (!socket.connected) socket.connect();
+    setStatus('joining');
+    setErrorMsg('');
+    socket.emit('joinRoom', { roomCode: code.toUpperCase() });
+  }, []);
+
+  const placeBet = useCallback((action: BettingAction) => {
+    socketRef.current?.emit('placeBet', { type: action.type, amount: action.amount });
+  }, []);
+
+  const restartGame = useCallback(() => {
+    socketRef.current?.emit('restartGame');
+  }, []);
+
+  return { status, roomCode, gameState, errorMsg, createRoom, joinRoom, placeBet, restartGame };
+}

@@ -1,4 +1,5 @@
 import { View, Text, Switch } from '@tarojs/components';
+import Taro from '@tarojs/taro';
 import { useMemo } from 'react';
 import { useGameFlow } from '@/hooks/useGameFlow';
 import CardDisplay from '@/components/CardDisplay';
@@ -164,6 +165,12 @@ export default function GamePage() {
               checked={state.winRateHintEnabled}
               onChange={toggleWinRateHint}
             />
+          </View>
+          <View className='game-page__toggle-item'>
+            <Text
+              className='game-page__toggle-label game-page__pvp-btn'
+              onClick={() => Taro.navigateTo({ url: '/pages/pvp/index' })}
+            >🎮 PVP 对战</Text>
           </View>
         </View>
       </View>
