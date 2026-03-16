@@ -19,6 +19,9 @@ export default defineConfig<'webpack5'>({
   copy: { patterns: [{ from: 'src/robots.txt', to: 'dist/robots.txt' }], options: {} },
   framework: 'react',
   compiler: 'webpack5',
+  cache: {
+    enable: true,
+  },
   alias: {
     '@': path.resolve(__dirname, '..', 'src'),
   },

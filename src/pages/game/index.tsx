@@ -1,5 +1,5 @@
 import { View, Text, Switch } from '@tarojs/components';
-import { useMemo, useState, lazy, Suspense } from 'react';
+import { useMemo, useState } from 'react';
 import { useGameFlow } from '@/hooks/useGameFlow';
 import CardDisplay from '@/components/CardDisplay';
 import ChipDisplay from '@/components/ChipDisplay';
@@ -9,11 +9,10 @@ import HandRankHint from '@/components/HandRankHint';
 import { getHandRankHint } from '@/components/HandRankHint/index';
 import WinRateHint from '@/components/WinRateHint';
 import ResultPanel from '@/components/ResultPanel';
+import PvpPage from '@/pages/pvp/index';
 import { getAvailableActions } from '@/engine/bettingEngine';
 import { MIN_RAISE } from '@/engine/types';
 import './index.scss';
-
-const PvpPage = lazy(() => import('@/pages/pvp/index'));
 
 export default function GamePage() {
   const [mode, setMode] = useState<'ai' | 'pvp'>('ai');
@@ -21,11 +20,7 @@ export default function GamePage() {
 
   // PVP 模式
   if (mode === 'pvp') {
-    return (
-      <Suspense fallback={<View className='game-page'><Text style={{ color: '#fff', textAlign: 'center', marginTop: '40vh' }}>加载中...</Text></View>}>
-        <PvpPage onBack={() => setMode('ai')} />
-      </Suspense>
-    );
+    return <PvpPage onBack={() => setMode('ai')} />;
   }
 
   const highlightCards = useMemo(() => {
