@@ -1,0 +1,8 @@
+{
+  "kiro.agent.trustedCommands": [
+    "chrome --remote-debugging-port=9222"
+  ],
+  "kiro.mcp.autoConnect": true,
+  "kiro.mcp.logLevel": "info",
+  "telemetry.enableTelemetry": false
+}

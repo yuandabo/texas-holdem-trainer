@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Taro from '@tarojs/taro';
+import { io } from 'socket.io-client';
 import { BettingAction } from '@/engine/types';
 
-const SERVER_URL = process.env.TARO_APP_PVP_SERVER || 'https://texas-holdem-trainer.onrender.com';
+const SERVER_URL = 'http://localhost:3000';
 
 export type PvpStatus = 'idle' | 'creating' | 'joining' | 'waiting' | 'playing' | 'disconnected' | 'error';
 
@@ -49,18 +50,19 @@ export function usePvpGame(): UsePvpGameReturn {
   const getSocket = useCallback(() => {
     if (socketRef.current) return socketRef.current;
     try {
-      // 动态 import 避免模块加载时崩溃
-      const { io } = require('socket.io-client');
       const socket = io(SERVER_URL, { autoConnect: false, transports: ['websocket', 'polling'] });
       socketRef.current = socket;
 
       socket.on('connect', () => {
         socketIdRef.current = socket.id || '';
         try {
-          const savedRoom = Taro.getStorageSync('pvp_room');
-          const savedSocketId = Taro.getStorageSync('pvp_socket_id');
-          if (savedRoom && savedSocketId && savedSocketId !== socket.id) {
-            socket.emit('reconnect', { roomCode: savedRoom, oldSocketId: savedSocketId });
+          // 只在断线重连状态下才尝试恢复会话
+          if (statusRef.current === 'disconnected') {
+            const savedRoom = Taro.getStorageSync('pvp_room');
+            const savedSocketId = Taro.getStorageSync('pvp_socket_id');
+            if (savedRoom && savedSocketId && savedSocketId !== socket.id) {
+              socket.emit('reconnect', { roomCode: savedRoom, oldSocketId: savedSocketId });
+            }
           }
           Taro.setStorageSync('pvp_socket_id', socket.id || '');
         } catch (e) { /* storage not available */ }
@@ -81,9 +83,10 @@ export function usePvpGame(): UsePvpGameReturn {
       socket.on('gameState', (state: PvpGameState) => {
         setGameState(state);
         setStatus('playing');
+        setErrorMsg('');
       });
 
-      socket.on('reconnected', () => { setStatus('playing'); });
+      socket.on('reconnected', () => { setStatus('playing'); setErrorMsg(''); });
       socket.on('opponentDisconnected', () => { setErrorMsg('对手断线，等待重连...'); });
       socket.on('opponentAbandoned', () => { setErrorMsg('对手已离开'); setStatus('idle'); });
       socket.on('error', (data: { message: string }) => { setErrorMsg(data.message); });

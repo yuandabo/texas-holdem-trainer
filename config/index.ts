@@ -15,7 +15,9 @@ export default defineConfig<'webpack5'>({
   sourceRoot: 'src',
   outputRoot: 'dist',
   plugins: ['@tarojs/plugin-framework-react', '@tarojs/plugin-platform-h5', '@tarojs/plugin-platform-weapp'],
-  defineConstants: {},
+  defineConstants: {
+    'process.env.TARO_APP_PVP_SERVER': JSON.stringify(process.env.TARO_APP_PVP_SERVER || ''),
+  },
   copy: { patterns: [{ from: 'src/robots.txt', to: 'dist/robots.txt' }], options: {} },
   framework: 'react',
   compiler: 'webpack5',
@@ -38,7 +40,7 @@ export default defineConfig<'webpack5'>({
     },
   },
   h5: {
-    publicPath: './',
+    publicPath: '/',
     staticDirectory: 'static',
     output: {
       filename: 'js/[name].[hash:8].js',

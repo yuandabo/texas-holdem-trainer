@@ -12,7 +12,7 @@ import { Room } from './room.model';
 
 @WebSocketGateway({ cors: { origin: '*' } })
 export class GameGateway implements OnGatewayDisconnect {
-  @WebSocketServer() server: Server;
+  @WebSocketServer() server!: Server;
 
   constructor(private readonly roomService: RoomService) {}
 
@@ -20,10 +20,10 @@ export class GameGateway implements OnGatewayDisconnect {
   @SubscribeMessage('createRoom')
   handleCreateRoom(@ConnectedSocket() client: Socket) {
     const room = this.roomService.createRoom();
-    const role = room.addPlayer(client.id);
+    const playerInfo = room.addPlayer(client.id);
     this.roomService['socketToRoom'].set(client.id, room.roomCode);
     client.join(room.roomCode);
-    client.emit('roomCreated', { roomCode: room.roomCode, role });
+    client.emit('roomCreated', { roomCode: room.roomCode, role: playerInfo.role });
   }
 
   /** 加入房间 */
@@ -55,6 +55,14 @@ export class GameGateway implements OnGatewayDisconnect {
 
     const success = room.placeBet(player.role, { type: data.type as any, amount: data.amount });
     if (!success) {
+      console.log('[placeBet] FAILED:', {
+        role: player.role,
+        action: data,
+        currentActor: room.state.bettingRound?.currentActor,
+        phase: room.state.phase,
+        roundEnded: room.state.bettingRound?.roundEnded,
+        availableActions: room.getAvailableActionsForCurrentActor(),
+      });
       client.emit('error', { message: '无效操作' });
       return;
     }

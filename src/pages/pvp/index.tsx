@@ -143,6 +143,9 @@ export default function PvpPage({ onBack }: { onBack?: () => void }) {
           />
         )}
 
+        {/* 错误信息 */}
+        {errorMsg && <Text className='pvp-page__error'>{errorMsg}</Text>}
+
         {/* 状态栏 */}
         <View className='game-page__status-bar'>
           <Text className='pvp-page__room-info'>房间: {gs.roomCode}</Text>

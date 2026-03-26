@@ -18,16 +18,16 @@ export default function GamePage() {
   const [mode, setMode] = useState<'ai' | 'pvp'>('ai');
   const { state, toggleHandRankHint, toggleWinRateHint, placeBet, restartGame } = useGameFlow();
 
-  // PVP 模式
-  if (mode === 'pvp') {
-    return <PvpPage onBack={() => setMode('ai')} />;
-  }
-
   const highlightCards = useMemo(() => {
     if (!state.handRankHintEnabled) return undefined;
     const hint = getHandRankHint(state.playerHand, state.communityCards);
     return hint ? hint.bestCards : undefined;
   }, [state.handRankHintEnabled, state.playerHand, state.communityCards]);
+
+  // PVP 模式
+  if (mode === 'pvp') {
+    return <PvpPage onBack={() => setMode('ai')} />;
+  }
 
   const isBetting = ['pre_flop_betting', 'flop_betting', 'turn_betting', 'river_betting'].includes(state.phase);
   const isPlayerTurn = isBetting && state.bettingRound?.currentActor === 'player' && !state.bettingRound?.roundEnded;

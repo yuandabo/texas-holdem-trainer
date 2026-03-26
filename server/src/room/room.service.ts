@@ -9,7 +9,8 @@ export class RoomService {
   private socketToRoom = new Map<string, string>();
 
   createRoom(): Room {
-    const room = new Room();
+    const existingCodes = new Set(this.rooms.keys());
+    const room = new Room(existingCodes);
     this.rooms.set(room.roomCode, room);
     return room;
   }
@@ -21,10 +22,13 @@ export class RoomService {
   joinRoom(roomCode: string, socketId: string): { room: Room; role: string } | null {
     const room = this.findByCode(roomCode);
     if (!room || room.isFull) return null;
-    const role = room.addPlayer(socketId);
-    if (!role) return null;
-    this.socketToRoom.set(socketId, room.roomCode);
-    return { room, role };
+    try {
+      const playerInfo = room.addPlayer(socketId);
+      this.socketToRoom.set(socketId, room.roomCode);
+      return { room, role: playerInfo.role };
+    } catch {
+      return null;
+    }
   }
 
   getRoomBySocket(socketId: string): Room | undefined {

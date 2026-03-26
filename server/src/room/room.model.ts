@@ -17,7 +17,7 @@ export interface PlayerInfo {
   role: PlayerRole;
   connected: boolean;
   /** 断线时间戳 */
-  disconnectedAt?: number;
+  disconnectedAt: number | null;
 }
 
 export interface RoomState {
@@ -47,9 +47,9 @@ export class Room {
   state: RoomState;
   private actionTimer: ReturnType<typeof setTimeout> | null = null;
 
-  constructor() {
+  constructor(existingCodes: Set<string> = new Set()) {
     this.id = uuidv4();
-    this.roomCode = this.generateRoomCode();
+    this.roomCode = Room.generateRoomCode(existingCodes);
     this.state = {
       phase: 'pre_flop_betting',
       communityCards: [],
@@ -63,22 +63,40 @@ export class Room {
     };
   }
 
-  private generateRoomCode(): string {
-    return Math.random().toString(36).substring(2, 8).toUpperCase();
+  static generateRoomCode(existingCodes: Set<string> = new Set()): string {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let code: string;
+    do {
+      code = '';
+      for (let i = 0; i < 6; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+    } while (existingCodes.has(code));
+    return code;
   }
 
   get isFull(): boolean { return this.players.size >= 2; }
   get playerCount(): number { return this.players.size; }
 
-  addPlayer(socketId: string): PlayerRole | null {
-    if (this.isFull) return null;
+  addPlayer(socketId: string): PlayerInfo {
+    if (this.isFull) {
+      throw new Error('房间已满');
+    }
     const role: PlayerRole = this.players.size === 0 ? 'player' : 'opponent';
-    this.players.set(socketId, { socketId, role, connected: true });
-    return role;
+    const playerInfo: PlayerInfo = { socketId, role, connected: true, disconnectedAt: null };
+    this.players.set(socketId, playerInfo);
+    return playerInfo;
   }
 
   getPlayerBySocket(socketId: string): PlayerInfo | undefined {
     return this.players.get(socketId);
+  }
+
+  getOpponent(socketId: string): PlayerInfo | undefined {
+    for (const p of this.players.values()) {
+      if (p.socketId !== socketId) return p;
+    }
+    return undefined;
   }
 
   getPlayerByRole(role: PlayerRole): PlayerInfo | undefined {
@@ -106,7 +124,7 @@ export class Room {
     this.players.delete(oldSocketId);
     player.socketId = newSocketId;
     player.connected = true;
-    player.disconnectedAt = undefined;
+    player.disconnectedAt = null;
     this.players.set(newSocketId, player);
     return player;
   }
