@@ -1,0 +1,10 @@
+node_modules
+dist
+android
+.git
+.idea
+.vscode
+.swc
+src
+config
+*.md
