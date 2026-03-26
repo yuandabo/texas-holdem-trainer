@@ -3,7 +3,9 @@ import Taro from '@tarojs/taro';
 import { io } from 'socket.io-client';
 import { BettingAction } from '@/engine/types';
 
-const SERVER_URL = 'http://localhost:3000';
+const SERVER_URL = process.env.NODE_ENV === 'production'
+  ? 'https://texas-holdem-pvp-production.up.railway.app'
+  : 'http://localhost:3000';
 
 export type PvpStatus = 'idle' | 'creating' | 'joining' | 'waiting' | 'playing' | 'disconnected' | 'error';
 
