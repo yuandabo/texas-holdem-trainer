@@ -1,79 +1,82 @@
 {
-    "name": "texas-holdem-trainer",
-    "version": "2.0.0",
-    "private": true,
-    "description": "德州扑克模拟训练器 - 在线学习德州扑克规则与策略 | Texas Hold'em Poker Trainer",
-    "keywords": [
-        "texas-holdem",
-        "poker",
-        "trainer",
-        "德州扑克",
-        "扑克训练器",
-        "taro",
-        "react",
-        "wechat-miniprogram"
-    ],
-    "author": "Texas Hold'em Trainer",
-    "license": "MIT",
-    "engines": {
-        "node": ">=18 || 24.x"
-    },
-    "templateInfo": {
-        "name": "default",
-        "typescript": true,
-        "css": "sass"
-    },
-    "scripts": {
-        "build:weapp": "taro build --type weapp",
-        "dev:weapp": "taro build --type weapp --watch",
-        "test": "jest",
-        "build:h5": "taro build --type h5",
-        "dev:h5": "taro build --type h5 --watch",
-        "build:android": "taro build --type h5 && npx cap sync android",
-        "build:apk": "npm run build:android && cd android && gradlew.bat assembleDebug",
-        "build:apk:release": "npm run build:android && cd android && gradlew.bat assembleRelease"
-    },
-    "browserslist": [
-        "last 3 versions",
-        "Android >= 4.1",
-        "ios >= 8"
-    ],
-    "dependencies": {
-        "@capacitor/android": "^8.2.0",
-        "@capacitor/core": "^8.2.0",
-        "@tarojs/components": "4.1.11",
-        "@tarojs/helper": "4.1.11",
-        "@tarojs/plugin-framework-react": "4.1.11",
-        "@tarojs/plugin-platform-h5": "^4.1.11",
-        "@tarojs/plugin-platform-weapp": "4.1.11",
-        "@tarojs/react": "4.1.11",
-        "@tarojs/runtime": "4.1.11",
-        "@tarojs/shared": "4.1.11",
-        "@tarojs/taro": "4.1.11",
-        "react": "^18.3.1",
-        "react-dom": "^18.3.1",
-        "socket.io-client": "^4.8.3",
-        "vconsole": "^3.15.1"
-    },
-    "devDependencies": {
-        "@babel/core": "^7.24.0",
-        "@babel/preset-env": "^7.24.0",
-        "@babel/preset-react": "^7.24.0",
-        "@babel/preset-typescript": "^7.24.0",
-        "@capacitor/cli": "^8.2.0",
-        "@pmmmwh/react-refresh-webpack-plugin": "^0.6.2",
-        "@tarojs/cli": "4.1.11",
-        "@tarojs/webpack5-runner": "4.1.11",
-        "@types/jest": "^29.5.0",
-        "@types/react": "^18.3.0",
-        "babel-jest": "^29.7.0",
-        "babel-preset-taro": "^4.1.11",
-        "fast-check": "^3.22.0",
-        "jest": "^29.7.0",
-        "react-refresh": "^0.14.0",
-        "sass": "^1.77.0",
-        "sharp": "^0.34.5",
-        "ts-jest": "^29.2.0",
-        "typescript": "^5.4.0"
-    }
+  "name": "texas-holdem-trainer",
+  "version": "2.0.0",
+  "private": true,
+  "description": "德州扑克模拟训练器 - 在线学习德州扑克规则与策略 | Texas Hold'em Poker Trainer",
+  "keywords": [
+    "texas-holdem",
+    "poker",
+    "trainer",
+    "德州扑克",
+    "扑克训练器",
+    "taro",
+    "react",
+    "wechat-miniprogram"
+  ],
+  "author": "Texas Hold'em Trainer",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18 || 24.x"
+  },
+  "templateInfo": {
+    "name": "default",
+    "typescript": true,
+    "css": "sass"
+  },
+  "scripts": {
+    "build:weapp": "taro build --type weapp",
+    "dev:weapp": "taro build --type weapp --watch",
+    "test": "jest",
+    "build:h5": "taro build --type h5",
+    "dev:h5": "taro build --type h5 --watch",
+    "build:android": "taro build --type h5 && npx cap sync android",
+    "build:apk": "npm run build:android && cd android && gradlew.bat assembleDebug",
+    "build:apk:release": "npm run build:android && cd android && gradlew.bat assembleRelease",
+    "deploy": "wrangler deploy",
+    "preview": "wrangler dev"
+  },
+  "browserslist": [
+    "last 3 versions",
+    "Android >= 4.1",
+    "ios >= 8"
+  ],
+  "dependencies": {
+    "@capacitor/android": "^8.2.0",
+    "@capacitor/core": "^8.2.0",
+    "@tarojs/components": "4.1.11",
+    "@tarojs/helper": "4.1.11",
+    "@tarojs/plugin-framework-react": "4.1.11",
+    "@tarojs/plugin-platform-h5": "^4.1.11",
+    "@tarojs/plugin-platform-weapp": "4.1.11",
+    "@tarojs/react": "4.1.11",
+    "@tarojs/runtime": "4.1.11",
+    "@tarojs/shared": "4.1.11",
+    "@tarojs/taro": "4.1.11",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "socket.io-client": "^4.8.3",
+    "vconsole": "^3.15.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.0",
+    "@babel/preset-env": "^7.24.0",
+    "@babel/preset-react": "^7.24.0",
+    "@babel/preset-typescript": "^7.24.0",
+    "@capacitor/cli": "^8.2.0",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.6.2",
+    "@tarojs/cli": "4.1.11",
+    "@tarojs/webpack5-runner": "4.1.11",
+    "@types/jest": "^29.5.0",
+    "@types/react": "^18.3.0",
+    "babel-jest": "^29.7.0",
+    "babel-preset-taro": "^4.1.11",
+    "fast-check": "^3.22.0",
+    "jest": "^29.7.0",
+    "react-refresh": "^0.14.0",
+    "sass": "^1.77.0",
+    "sharp": "^0.34.5",
+    "ts-jest": "^29.2.0",
+    "typescript": "^5.4.0",
+    "wrangler": "^4.77.0"
+  }
 }
